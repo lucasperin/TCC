@@ -1,0 +1,160 @@
+\chapter{Integridade e Sigilo}
+
+\TODO{Já está bem comentado na intro. Trocar por uma breve introdução do capitulo.}
+
+Um dos problemas mais comuns quando se trata do sigilo em base de dados \'{e} a leitura n\~{a}o autorizada de informa\c{c}\~{o}es sens\'{i}veis presentes nas tabelas.
+A prote\c{c}\~{a}o contra este tipo de acesso pode ser ser feita a n\'{i}vel de aplica\c{c}\~{a}o, o que \'{e} de fato realizada na maioria dos casos.
+Para tal, sugere-se a cifração de dados em colunas das tabelas.
+Deve-se selecionar colunas onde existem informa\c{c}\~{o}es sigilosas nas tabelas e mante-las cifradas. A cifração destes dados pode ser feita diretamente pela aplica\c{c}\~{a}o
+ou pelo \ac{SGBD}.
+
+Para não afetar muito o desempenho das consultas, é comum o uso de métodos de indexação juntamente com a cifração dos dados \cite{samarati.encryption.2006, samarati.indexing.2003, hakan.indexing.2004}.
+
+Para evitar a modificação não autorizada de registros contidos na base de dados, a aplicação deve restringir e definir as permissões de cada usuário.
+O \ac{SGBD} também deve conter um mapeamento correto de usuários e seus respectivos privilégios a fim de impedir a execução de ações não autorizadas.
+Entretanto, existem perfis de usuários, como os administradores do servidor, \ac{DBA} e programadores, que podem acessar o \ac{SGBD} sem o conhecimento da aplicação,
+podendo ocorrer situações onde, embora o usuário não seja autorizado a realizar determinada modificação, ele tenha permissões suficientes no sistema que permitem que ele o faça, mesmo que não intencionalmente.
+A cifração de colunas que contém dados sensíveis já reduz consideravelmente este problema, uma vez que um usuário mal-intencionado não conseguirá modificar o registro por não possuir a chave,
+ e possivelmente sequer será capaz de identificar qual registro ele deve modificar para obter os efeitos que ele deseja. Embora as chances do atacante sejam reduzidas, ainda há a possibilidade de realizar modificação de registros 
+ a fim de corromper o sistema.
+
+Infelizmente, os \ac{SGBD}s mais comuns, como MySQL, PostreSQL, Firebird, etc, n\~{a}o possuem mecanismos para evitar tais problemas.
+Outros sistemas mais espec\'{i}ficos possuem op\c{c}\~{o}es mais avan\c{c}adas, por\'{e}m também possuem custo bastante elevado.
+Para prover tal funcionalidade, foi estudada uma proposta que faz uso de \ac{HMAC} \cite{Bellare:1996:KHF:646761.706031, rfc6151}.
+
+\section{Adi\c{c}\~{a}o do c\'{a}lculo do \ac{HMAC} nos registros da base de dados}
+
+Para se implementar este mecanismo, a aplica\c{c}\~{a}o ser\'{a} a \'{u}nica respons\'{a}vel pela manipula\c{c}\~{a}o dos registros da base de dados, e, para prover tal garantia,
+a aplica\c{c}\~{a}o ter\'{a} uma chave sim\'{e}trica conhecida somente por ela. Esta chave, por sua vez, ser\'{a} utilizada para gerar o \ac{HMAC} dos registros.
+
+Atrav\'{e}s da utiliza\c{c}\~{a}o do \ac{HMAC}, \'{e} poss\'{i}vel detectar qualquer modifica\c{c}\~{a}o não autorizada realizada nos registros. Isto deve-se ao fato de que o atacante não tem conhecimento
+da chave necessária para gerar o \ac{HMAC}, impossibilitando-o que consiga calcular um valor de \ac{HMAC} válido. Este mecanismo tamb\'{e}m soluciona a quest\~{a}o de adi\c{c}\~{a}o de registros pelo atacante,
+pois novamente, este necessitar\'{a} da chave da aplica\c{c}\~{a}o para realizar o cálculo do \ac{HMAC} de forma correta.
+
+\section{Exemplo de implementa\c{c}\~{a}o}
+
+Para exemplificar o funcionamento do método utilizando \ac{HMAC}, considere uma tabela de pessoas, com as colunas id, nome, email e a coluna para armazenar o valor do \ac{HMAC}. Os dados s\~{a}o apresentados na Tabela \ref{tab:exemplo}.
+
+\begin{table}[htb]\footnotesize
+  \begin{center}
+    \caption{Tabela de exemplo de dados.}\label{tab:exemplo}
+    \begin{tabular}{|l|l|l|l|}\hline
+      \textbf{\underline{id}} & \textbf{nome} & \textbf{email} & \textbf{hmac} \\ \hline
+       1 & Joao & joao@foo.com.br & abcd \\ \hline
+      2 & Maria & maria@foo.com.br & qwer \\ \hline
+      3 & Ana & ana@foo.com.br & kjhd \\ \hline
+      4 & Roberto & roberto@foo.com.br & vpiu \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\subsection{Adicionando registros}
+
+Para adicionar um novo registro, a aplicação deve primeiramente calcular o valor do \ac{HMAC} para o novo registro. Esse cálculo é feito através da concatenação dos valores de todas as colunas da tabela.
+Para adicionar uma nova pessoa com o nome ``Jose'' e email ``jose@foo.com.br'', o cálculo do \ac{HMAC} é apresentado na expressão (\ref{eq:hmac-exemplo}).
+
+\begin{equation} \label{eq:hmac-exemplo}
+    HMAC(chave, Josejose@foo.com.br) = ohn4
+\end{equation}
+
+Ap\'{o}s o calculo do \ac{HMAC}, a aplica\c{c}\~{a}o envia o comando de insert ao banco de dados, conforme ilustrado no trecho de código \ref{fonte:exemplo-insert}.
+
+\lstset{language=SQL,
+	basicstyle=\small,
+        breaklines=true,
+        numbersep=5pt,
+        xleftmargin=.35in,
+        xrightmargin=.35in}
+\begin{center}
+\begin{lstlisting}[label=fonte:exemplo-insert, caption=Código SQL para inserir um registro com HMAC]
+INSERT INTO exemplo (nome, email, hmac)
+VALUES ('Jose',
+        'jose@foo.com.br',
+        'ohn4');
+\end{lstlisting}
+\end{center}
+
+\subsection{Modificando registros}
+
+A modificação de um registro é semelhante à adição. Por exemplo, para a alteração do registro número 3, da Tabela \ref{tab:exemplo},
+primeiramente deve-se consultar o banco de dados para obter o registro, conforme ilustrado no trecho de código \ref{fonte:exemplo-select}.
+O pr\'{o}ximo passo \'{e} calcular o \ac{HMAC}, apresentado na express\~{a}o (\ref{eq:hmac-exemplo-2}).
+Por fim, atualiza-se o registro com o comando update ilustrado no trecho de código \ref{fonte:exemplo-update}.
+
+\lstset{language=SQL,
+	basicstyle=\small,
+        breaklines=true,
+        numbersep=5pt,
+        xleftmargin=.35in,
+        xrightmargin=.35in}
+\begin{center}
+\begin{lstlisting}[label=fonte:exemplo-select, caption=Código SQL para selecionar um registro]
+    SELECT nome, email FROM exemplo WHERE id='3';
+\end{lstlisting}
+\end{center}
+
+\begin{equation} \label{eq:hmac-exemplo-2}
+    HMAC(chave, Anaana.new@foo.com.br) = m3cx
+\end{equation}
+
+\lstset{language=SQL,
+	basicstyle=\small,
+        breaklines=true,
+        numbersep=5pt,
+        xleftmargin=.35in,
+        xrightmargin=.35in}
+\begin{center}
+\begin{lstlisting}[label=fonte:exemplo-update, caption=Código SQL para atualizar um registro com HMAC]
+    UPDATE exemplo SET email='ana.new@foo.com.br', hmac='m3cx'
+    	WHERE id='3';
+\end{lstlisting}
+\end{center}
+
+\subsection{Verificando a integridade de registros}
+
+Por fim, para verifica\c{c}\~{a}o da integridade de um registro, deve ser feita uma consulta ao banco de dados pelo registro. Calcula-se o \ac{HMAC} para o registro e compara o \ac{HMAC} calculado com o \ac{HMAC} obtido do banco de dados.
+A igualdade desses valores indica que o registro está íntegro.
+
+\section{Medidas de prote\c{c}\~{a}o contra remo\c{c}\~{a}o n\~{a}o autorizada}
+
+Atrav\'{e}s da utiliza\c{c}\~{a}o do \ac{HMAC}, j\'{a} \'{e} poss\'{i}vel detectar qualquer modifica\c{c}\~{a}o e adi\c{c}\~{a}o não autorizada de registros.
+Entretanto, não é possível detectar a remoção não autorizada de registros.
+
+Para o problema de remoção não autorizada de registros, sugere-se a criação de uma nova coluna para as tabelas do banco de dados, chamada de ``Histórico cifrado''.
+O hist\'{o}rico cifrado possui as seguintes caracter\'{i}sticas:
+
+\begin{itemize}
+	\item permite relacionar dois ou mais registros de forma que possa se detectar a aus\^{e}ncia de um deles, caso este seja removido;
+	\item n\~{a}o permitir que uma terceira parte possa calcular o ``hist\'{o}rico cifrado'' sem conhecer as chaves de cifração;
+	\item utiliza\c{c}\~{a}o de opera\c{c}\~{o}es de baixo custo computacional: criptografia sim\'{e}trica e a opera\c{c}\~{a}o l\'{o}gica ``ou exclusivo'' (XOR);
+	\item requer pouco espa\c{c}o de armazenamento;
+	\item n\~{a}o permite que sejam detectadas dele\c{c}\~{o}es dos $n$ \'{u}ltimos registros.
+\end{itemize}
+
+Para calcular o hist\'{o}rico cifrado de um registro $n$, obtém-se o \ac{HMAC} desse registro e do registro anterior a ele. Em seguida é aplicada a função XOR nestes \ac{HMAC}s e o resultado é cifrado
+com uma chave simétrica. Esse cálculo é apresentado na expressão (\ref{eq:historico}).
+
+\begin{equation} \label{eq:historico}
+\small
+HistoricoCifrado(chave, HMAC_{n}, HMAC_{n-1}) = Cifração(k, (HMAC_{n} \oplus HMAC_{n-1}))
+\end{equation}
+
+\subsection{Removendo um registro}
+
+Para remover um registro $n$, deve-se excluir o registro e atualizar o hist\'{o}rico cifrado do registro $n+1$. Para atualizar o hist\'{o}rico cifrado, utiliza-se o \ac{HMAC} registro $n+1$ e $n-1$.
+
+\subsection{Verificando se um registro foi removido}
+
+Para verificar se um registro $t_{n}$, de uma tabela $T$ foi removido, a seguinte propriedade deve ser satisfeita:
+\begin{equation} \label{eq:validacaoHistorico}
+\forall t_{n}, t_{n+1} \in T : t_{n}.HistoricoCifrado = HistoricoCifrado (chave, t_{n}, t_{n+1}) 
+\end{equation}
+\subsection{Remoç\~{a}o do ultimo registro}
+Esta proposta possui uma vulnerabilidade, o método apresentado não detecta quando os últimos registros são removidos indevidamente, uma vez que a verificação é feita com base no registo anterior.
+ Uma possível solução para o problema consiste em adicionar ao final da tabela uma enupla com valores aleatórios conhecidos. 
+ Dessa forma, se o último registro for removido, poderá ser identificado, uma vez que os valores de controle não estarão mais presentes.
+ \TODO{Desenvolver melhor a ideia explicando como serão afetadas as operações CRUD. Mencionar também solução circular com citação do artigo do Anderson}
+ 
+ 
+ \TODO{Começar explicando a ideia? E depois o que foi feito para ela existir? Tem que falar da biblioteca, dos provideres para os cada dispositivo
+ (e do callback remoto?), do gerenciador de chaves pkcs\#12, e outros subprojetos}

@@ -1,0 +1,57 @@
+\chapter{Introdução}
+O uso de sistemas de bancos de dados tornou-se recorrente para os mais diversos tipos de aplicações. Com o uso extensivo da internet, as
+aplicações que utilizam sistemas de bancos de dados \textit{online} são cada vez mais comuns.
+
+Aplicações que utilizam bancos de dados \textit{online} normalmente armazenam dados sensíveis, como salários e outras informaçõees pessoais \cite{Kamel.integrity.2009}.
+Devido ao conteúdo potencialmente sigiloso, o acesso ou a modificação não autorizada a tais dados pode não ser desejado.
+Dessa forma, o sigilo e integridade de sistemas de banco de dados tem atraído pesquisadores das áreas de banco de dados e segurança.
+Os sistemas de banco de dados, quando utilizados em ambientes compartilhados, possuem diversas ameaças de segurança provenientes de
+usuários não-autorizados, mau-uso e ameaças externas. Baseando-se nestas características, pode-se classificar as ameaças em quatro
+tipos principais:
+\begin{enumerate}
+ \item leitura não autorizada de dados;
+ \item modificação não autorizada de dados;
+ \item remoção não autorizada de dados;
+ \item adição não autorizada de dados.
+\end{enumerate}
+%\TODO{Está OK para TCC1, adicionar mais dados para a monografia. Dados com datas, marcos históricos etc..}
+
+\section{Objetivos}
+
+\subsection{Gerais}
+Este trabalho tem como objetivo geral apresentar soluções plausíveis para garantir a integridade de bancos de dados, protegendo o conteúdo sensível 
+de ataques maliciosos ou de modificações não autorizadas. Além disso, deverá ser possível detectar alterações indevídas n
+
+\subsection{Específicos}
+\begin{itemize}
+  \item Elaborar uma biblioteca em Java de com a finalidade de prover suporte para as soluções apresentadas neste trabalho;
+  \item Providenciar suporte aos dispositivos criptográficos existentes no mercado com a biblioteca criada, incrementando novas camadas de 
+  segurança para as aplicações que fizerem uso da biblioteca;
+  \item Facilitar o desenvolvimento de aplicações de \textit{software} com garantia de integridade de bancos de dados;
+  \item Manter as soluções apresentadas dentro de uma faixa de desempenho atraente para aplicações que possam vir a utilizar a biblioteca criada.
+\end{itemize}
+
+\section{Justificativa}
+O problema da leitura não autorizada de dados (sigilo dos dados) já foi pesquisado extensivamente e normalmente é resolvido através da
+cifração do banco de dados \cite{samarati.encryption.2006, Samarati:2010}, em conjunto com métodos de indexação
+\cite{samarati.encryption.2006, samarati.indexing.2003}, para agilizar as consultas.
+Entretanto, os problemas de modificações não autorizadas de dados (integridade dos dados) ainda necessitam de soluções eficientes
+\cite{Samarati:2010}.
+Os métodos existentes para tal problema geralmente requerem o desenvolvimento de um novo \ac{SGBD} ou
+alterações significantes nos \ac{SGBD}s já existentes \cite{Xie.integrity.2007}. Adicionalmente, soluções disponíveis no mercado possuem 
+custo elevado de implantação e manutenção, inviáveis para empresas de pequeno e médio porte que também necessitam de tais serviços de segurança.
+
+\section{Metodologia}
+\TODO{Trocar o tempo verbal? Ex: ``Como ela está contruida e como seus serviços são acessados'' por ``Como ela SERÁ contruida e como seus serviços SERÃO..''}
+
+Neste trabalho, será estudada toda a fundamentação teórica necessária para compreender as soluções propostas. Será demonstrado como 
+as ameaças citadas anteriormente podem ser combatidas utilizando \ac{HMAC} e a cifração de dados sigilosos. Em seguida, serão comentadas 
+e justificadas as tecnologias utilizadas para o desenvolvimento da biblioteca. Em posse desse conhecimento, pode-se finalmente elaborar mais sobre a solução.
+O próximo passo, será demonstração da fundamentação da biblioteca. Como ela está construida e como que seus serviços são acessados pelas aplicações. É importante 
+levantar que uma biblioteca de \textit{software} não constitui uma aplicação por si só. Ela apenas contribui com os recursos necessários para soluções.
+Em um último momento, as soluções criadas neste trabalho serão testadas em divérsos cenários. Dessa forma, pode-se demonstrar o custo de desempenho para a 
+utilização da biblioteca de integridade de bancos de dados.
+
+%\section{Limitações do Trabalho}
+%\TODO{Verificar a necessidade. Usar TCC Dexter como exemplo}
+

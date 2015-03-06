@@ -1,0 +1,77 @@
+%\documentclass[a4paper,12pt,ruledheader]{abnt}
+\documentclass[a4paper,12pt]{abnt} % sem o capÂ´itulo em todos as paginas
+\usepackage[left=3.0cm,right=2.0cm,top=3.0cm,bottom=2.0cm]{geometry}
+\usepackage[brazil]{babel}
+% \usepackage{ae}             
+\usepackage[T1]{fontenc}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks,citecolor=black,filecolor=black,linkcolor=black,urlcolor=black}
+
+%\usepackage{abstract}
+\usepackage[utf8]{inputenc}
+%\usepackage{setspace}
+\usepackage[alf]{abntcite}
+\usepackage{amssymb}
+%\usepackage{cite} %
+%\setlength{\parskip}{1.5cm} %espaÃ§o inicio paragrafo
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[printonlyused]{acronym}
+\usepackage{listings}
+\usepackage{lscape}
+\usepackage[usenames,dvipsnames]{color}
+%\usepackage{subfigure}
+\usepackage{amsthm}
+\usepackage{verbatim} 
+\usepackage{pslatex}
+\usepackage{float}
+%\usepackage{appendix}
+\usepackage{color}
+\usepackage{colortbl}
+%\usepackage{afterpage}
+
+%----------------------------------------------------------------------
+% Comandos criados pelo usuário
+\newcommand{\TODO}[1]{{\color{red}{#1}}} % Para destacar uma parte a ser trabalhada
+
+%http://tassni.blogspot.com/2009/08/latex-hifenacao-com-portugues-do-brasil.html
+%https://lists.ubuntu.com/archives/ubuntu-pt/2008-December/005882.html
+
+\pdfinfo{/Title (Monografia Gabriel Garcia Becker, Lucas Pandolfo Perin)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Incio do documento                                
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%\onehalfspace
+\include{estrutura/inicio}
+\tableofcontents
+\include{estrutura/Acronimos}
+\listoffigures
+\listoftables
+\include{estrutura/resumo}
+\include{estrutura/abstract}
+\acresetall 
+%-------------------------------
+\include{estrutura/Introducao}
+%includes
+%\include{Contextualizacao}
+%\include{Objetivos}
+%\include{Justificativa}
+%\include{Metodologia}
+%\include{Limitacoes}
+%\include{Organizacao}
+%-------------------------------
+\include{Fundamentacao}
+\include{integridade-sigilo}
+\include{TestesDesempenho}
+%-------------------------------
+\include{Implementacao}
+%-------------------------------
+\include{estrutura/Conclusao}
+\bibliographystyle{abnt-alf}
+\bibliography{../ref/rfc,../ref/artigo,../ref/references}
+%\include{Anexos}
+\end{document}
+

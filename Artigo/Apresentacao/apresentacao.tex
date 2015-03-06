@@ -1,0 +1,95 @@
+\documentclass{beamer}
+\usetheme{Labsec}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{wrapfig}
+\usepackage{pgfpages}
+\usepackage{ulem}
+
+%\setbeameroption{show notes on second screen}
+%\usepackage[width=3cm,tab]{beamerthemesidebar} % coloca a barra de navegacao lateral
+
+\setbeamertemplate{navigation symbols}{} % tira a navegação}%C
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dados da Apresentação %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{An\'{a}lise e implementa\c{c}\~{a}o de um m\'{e}todo para prover integridade a sistemas de banco de dados}
+\author{Gabriel Garcia Becker, Lucas Pandolfo Perin, Anderson Luiz Silv\'{e}rio, \\Marcelo Carlomagno Carlos, Ricardo Felipe Cust\'{o}dio}
+\institute[LabSEC]{
+  Laboratório de Segurança em Computação\\
+  Universidade Federal de Santa Catarina\\[1ex]
+  \texttt{\{gabrielbecker, lucasperin, anderson.luiz, custodio\}@inf.ufsc.br}
+  \texttt{marcelo.carlos.2009@rhul.ac.uk}
+  
+}
+\date{19 de Novembro de 2012}
+
+% Mostra o sumario antes de cada nova secao
+\AtBeginSection[]
+{
+\begin{frame}
+\frametitle{\insertsection}
+%\tableofcontents[currentsection,hideallsubsections]
+%\tableofcontents[currentsection,hideallsubsections,subsection=hide]
+\tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/show/hide]
+\end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%
+% INÍCIO DOCUMENTO %
+%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%
+% Slide de Titulo %
+%%%%%%%%%%%%%%%%%%%
+{
+\usebackgroundtemplate{\includegraphics[width=1.0\paperwidth]{images-template/watermark-logo.png}}
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Slide de Sumario Geral %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+	\frametitle{Sum\'{a}rio}
+	\tableofcontents[hideallsubsections]
+	%\tableofcontents
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       Introducao       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introdução}
+\input{tex/introducao}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  proposta  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proposta}
+\input{tex/proposta}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  desempenho  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Desempenho}
+\input{tex/desempenho}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Implementação      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Implementação}
+\input{tex/implementacao}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%       Conclusoes       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Considerações finais}
+\input{tex/conclusao}
+
+\end{document}

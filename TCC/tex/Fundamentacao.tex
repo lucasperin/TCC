@@ -1,0 +1,81 @@
+\chapter{Fundamentação Teórica}
+
+\section{Criptografia}
+\textit{Criptografia} é o estudo e a arte de transformar informação de forma que fique ilégivel ou incompreensível para todos exceto 
+a quem ela for destinada. Utilizada quase que exclusivamente nos seus dias mais atuais em circunstâncias diplomaticas e militares, hoje 
+é mais do que um simples meio de trocar informação secreta \cite{Luciano}. Existe a necessidade urgente de proteger a vasta quantidade de dados existêntes 
+em meios digitais, mesmo aqueles em ambientes supostamente seguros. 
+De acordo com Housley, criptografia pode ser definida como:
+%\TODO{Continuar explorando o artigo do Luciano para relatar mais sobre história da criptografia (TCC2)}
+\begin{quote}
+\footnotesize{
+A palavra criptografia significa escondido ou escrita secreta. Criptografia é conhecida geralmente como o 
+embaralhamento e o desembaralhamento de mensagens privadas. Uma mensagem é embaralhada para manter sua privacidade 
+ou para proteger sua confidencialidade. Técnicas modernas de criptografia são também usadas para determinar caso uma mensagem 
+foi alterada após o momento de ter sido criada e para identificar a origem da mesma. Uma mensagem não adulterada tem integridade. 
+O conhecimento da origem de uma mensagem significa autenticidade.
+} \cite[p.-5]{Planning}
+\end{quote}
+
+Existem diversos algoritmos criptográficos para cifragem e decifragem de mensagens. Em sua maioria, faz-se uso de duas entradas para gerar uma mensagem cifrada. 
+Uma das entrada é o conteudo da informação sigilosa e a outra é um valor secreto denominado \textit{chave}. Depedendo se o algorítmo é dito simétrico ou asimétrico, 
+poderão uma ou mais chaves funcionando de maneiras diferentes. 
+
+\subsection{Criptografia Simétrica}
+Em \textit{cripotografia simétrica}, usa-se apenas uma chave secreta entre quem envia e quem recebe a mensagem cifrada. É por este motivo que sistemas que fazem uso de 
+criptografia simétrica podem também ser chamados de sistemas de \textit{chaves secretas compartilhadas} \cite{Planning}. Em um cenário onde deseja-se enviar uma mensagem 
+cifrada para alguém, deve-se garantir que essa chave seja uma segredo entre destino e destinatário. A mesma chave será utilizada no processo de cifragem por quem envia e também no 
+processo de decifragem por quem recebe.
+   
+\subsection{Criptografia Assimétrica}
+Enquanto o uso de chaves simétricas pode ser bastante conveniênte, o gerenciamento das mesmas pode se tornar bastante complexo. Em alguns casos, 
+deseja-se manter uma vasta quantidade de chaves para comunicação segura entre diversos periféricos. Nesses casos algoritmos de comunicação, por exemplo, podem se tornar pouco eficiêntes devido a 
+necessidade de gerenciar uma chave para cada destino diferente.
+
+\textit{Criptografia assimétrica} ou \textit{criptografia de chaves públicas}, utiliza duas chaves distintas no lugar de uma. Uma delas chamada de \textit{chave privada} e a outra chamada de \textit{chave pública}. 
+Ambas chaves são complementares, porém, nunca deve ser possível obter-se a chave privada através da chave pública \cite{Planning}. O uso de chaves públicas simplifica bastante o processo de gerenciamente de chaves 
+pelo fato de reduzir drasticamente o número de chaves que serão gerenciadas. Por outro lado, algorítmos de cifração de dados através do uso de chaves públicas não são tão eficiêntes quando os de chave simétrica. 
+Adicionalmente, pelo fato de existir uma chave pública capaz de decifrar a informação protegida, esta informação não possui mais confidencialidade, apenas autenticidade.
+
+Existem diversos usos para criptografia de chaves públicas. Entre eles, a troca de chaves públicas para gerar uma chave simétrica conhecida entre apenas dois periféricos \cite{KeyAgreement}. Outro exemplo é 
+a \ac{ICP}, mantendo uma cadeia de entidades com posse de chaves privadas, é capaz de garantir autenticidade de documentos eletrônicos para usuários \cite{Planning}. 
+
+\subsection{Resumo criptográfico}
+\TODO {precisa disso? usamos o hmac, talvez só falar dele}
+\TODO{Chave de seção?}
+
+\section{Bancos de Dados}
+
+\section{Tecnologias usadas}
+\TODO{Lucas Martins aconselhou não utilizar as subsections aqui. Resumir todo o conteudo em alguns parágrafos. Talvez cortar algumas tecnologias como Java, xml, Junit, etc..}
+
+\subsection{Bouncy Castle}
+
+\subsection{LibCryptodev}
+
+\subsection{Java}
+
+\subsection{SQLite}
+
+\subsection{Subversion}
+
+\subsection{JUnit}
+
+\subsection{XML}
+
+\subsection{TPMJ}
+\TODO{foi usado o tpmj porque o modulo pkcs\#11 para o acesso ao tpm era bastante instável}
+
+
+
+\TODO{foi usado mais alguma coisa, mais alguma coisa precisa ser colocada aqui?}
+
+\TODO{Keystore, vai na criptografia?}
+
+\TODO{O PKCS\#11 vai nisso?, e PKCS\#12}
+
+\TODO{falar o que é um provider?}
+
+\TODO{chaves PEM e DER, falar?, deu problemas com isso no TPMJ}
+
+\TODO{Ant? Foi usado isso para fazer os builds das versões}
